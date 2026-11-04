@@ -7,10 +7,14 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
   body {
-    background: #050b16 url("IMG_3183.jpeg") center/cover no-repeat fixed;
+    background-color: #050b16;
+    background-image: url("IMG_3183.jpeg"), url("img"), url("img.jpg"), url("IMG_3183.jpg");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
     font-family: ui-sans-serif, system-ui, sans-serif;
   }
-  body::before { content:""; position:fixed; inset:0; background:rgba(5,11,22,.55); z-index:-1; }
+  body::after { content:""; position:fixed; inset:0; background:rgba(5,11,22,.45); z-index:-1; pointer-events:none; }
   .gold-text { background: linear-gradient(92deg,#F3D98B,#C9A227 45%,#8A6D12); -webkit-background-clip:text; background-clip:text; color:transparent; }
   .btn-gold { background: linear-gradient(135deg,#F3D98B,#C9A227 55%,#9c7c17); color:#0B1F3A; box-shadow:0 12px 40px rgba(201,162,39,.45), inset 0 1px 0 rgba(255,255,255,.5); transition: transform .18s ease, box-shadow .18s ease; }
   .btn-gold:hover { transform: translateY(-3px) scale(1.03); box-shadow:0 18px 55px rgba(201,162,39,.6), inset 0 1px 0 rgba(255,255,255,.5); }
@@ -28,10 +32,10 @@
 <body class="min-h-screen text-white flex items-center justify-center px-4 py-8 antialiased">
   <main class="w-full max-w-3xl text-center">
 
-    <!-- VIDEO: auto-plays with sound; volume/mute available in controls -->
+    <!-- VIDEO: auto-plays once, with sound when the browser allows; volume/mute in controls -->
     <div class="mx-auto rounded-3xl overflow-hidden border border-white/10 shadow-[0_25px_80px_rgba(0,0,0,.55)] bg-black max-w-xl">
       <video id="mercyVideo" class="w-full aspect-[9/16] max-h-[62vh] object-cover"
-             autoplay playsinline controls preload="auto">
+             playsinline controls preload="auto">
         <source src="Where_the_Road_Grew_Quiet_11-01%2001-34-28.mp4" type="video/mp4">
         Your browser does not support the video tag.
       </video>
@@ -50,7 +54,7 @@
     <!-- TITLE BLOCK (bottom) -->
     <p class="tracking-[0.45em] uppercase text-xs text-amber-200/70 mt-12">The Soulful Gospel Anthem</p>
     <h1 class="gold-text text-4xl sm:text-6xl font-extrabold leading-tight mt-2">I&rsquo;m Coming Home<br>to Mercy</h1>
-    <p class="text-slate-300/90 mt-2 text-lg">Frederick D. Thomas, Jr.</p>
+    <p class="text-slate-300/90 mt-2 text-lg">Frederick D. Thomas, Jr. &middot; #NOQUIT</p>
 
     <footer class="mt-8 text-slate-500 text-sm">
       <p>&copy; 2026 Frederick D. Thomas, Jr.</p>
@@ -58,7 +62,7 @@
   </main>
 
   <audio id="mercySong" preload="auto">
-    <source src="I%27m%20Coming%20Home%20to%20Mercy.m4a" type="audio/mp4">
+    <source id="songSrc" src="I%27m%20Coming%20Home%20to%20Mercy.m4a" type="audio/mp4">
   </audio>
 
 <script>
@@ -66,20 +70,36 @@
   var song  = document.getElementById("mercySong");
   var btn   = document.getElementById("songBtn");
 
-  // Auto-play WITH sound; if the browser blocks it, fall back to muted and retry on first tap
-  function tryUnmuted() {
+  // Auto-play WITH sound, exactly once; volume/mute stays available in the controls.
+  // If the browser blocks loud autoplay, start muted and unmutes itself on the viewer's first tap.
+  function autoplayUnmuted() {
     video.muted = false;
     var p = video.play();
-    if (p && p.catch) p.catch(function () {
+    if (p && p.then) p.then(function () {
+      video.addEventListener("ended", function () { video.pause(); }, { once: true });
+    }).catch(function () {
       video.muted = true;
-      video.play();
-      video.addEventListener("click", function once() {
-        video.muted = false;
-        video.removeEventListener("click", once);
-      });
+      video.play().then(function () {
+        var unmute = function () { video.muted = false; video.removeEventListener("play", unmute); };
+        video.addEventListener("play", unmute);
+      }).catch(function () {});
     });
   }
-  video.addEventListener("canplay", tryUnmuted, { once: true });
+  autoplayUnmuted();
+
+  // Song button with filename fallback
+  var songCandidates = [
+    "I%27m%20Coming%20Home%20to%20Mercy.m4a",
+    "I%27m%20Coming%20Home%20to%20Mercy.wav",
+    "song.m4a",
+    "song.wav"
+  ];
+  (function chainSong() {
+    var src = document.getElementById("songSrc"), i = 0;
+    src.addEventListener("error", function () {
+      if (++i < songCandidates.length) { src.src = songCandidates[i]; song.load(); }
+    });
+  })();
 
   function toggleSong() {
     if (song.paused) { video.pause(); song.play(); }
