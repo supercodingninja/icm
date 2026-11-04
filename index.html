@@ -8,55 +8,43 @@
 <style>
   body {
     background-color: #050b16;
-    background-image: url("IMG_3183.jpeg"), url("img"), url("img.jpg"), url("IMG_3183.jpg");
+    background-image: url("IMG_3183.jpeg"), url("img"), url("img.jpg");
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
     font-family: ui-sans-serif, system-ui, sans-serif;
   }
-  body::after { content:""; position:fixed; inset:0; background:rgba(5,11,22,.45); z-index:-1; pointer-events:none; }
+  body::after { content:""; position:fixed; inset:0; background:rgba(5,11,22,.4); z-index:-1; pointer-events:none; }
   .gold-text { background: linear-gradient(92deg,#F3D98B,#C9A227 45%,#8A6D12); -webkit-background-clip:text; background-clip:text; color:transparent; }
   .btn-gold { background: linear-gradient(135deg,#F3D98B,#C9A227 55%,#9c7c17); color:#0B1F3A; box-shadow:0 12px 40px rgba(201,162,39,.45), inset 0 1px 0 rgba(255,255,255,.5); transition: transform .18s ease, box-shadow .18s ease; }
   .btn-gold:hover { transform: translateY(-3px) scale(1.03); box-shadow:0 18px 55px rgba(201,162,39,.6), inset 0 1px 0 rgba(255,255,255,.5); }
   .btn-gold:active { transform: translateY(0) scale(.98); }
-  .pulse-ring::before { content:""; position:absolute; inset:-10px; border-radius:9999px; border:2px solid rgba(201,162,39,.55); animation: ring 2s ease-out infinite; }
-  @keyframes ring { 0%{transform:scale(.9);opacity:.9} 100%{transform:scale(1.35);opacity:0} }
-  .eq span { display:inline-block; width:5px; margin:0 3px; border-radius:3px; background:linear-gradient(180deg,#F3D98B,#8A6D12); animation: eq 1s ease-in-out infinite; animation-play-state: paused; }
-  .playing .eq span { animation-play-state: running; }
-  .eq span:nth-child(1){height:16px;animation-delay:0s}.eq span:nth-child(2){height:28px;animation-delay:.15s}
-  .eq span:nth-child(3){height:20px;animation-delay:.3s}.eq span:nth-child(4){height:32px;animation-delay:.45s}
-  .eq span:nth-child(5){height:18px;animation-delay:.6s}
-  @keyframes eq { 0%,100%{transform:scaleY(.4)} 50%{transform:scaleY(1)} }
 </style>
 </head>
 <body class="min-h-screen text-white flex items-center justify-center px-4 py-8 antialiased">
-  <main class="w-full max-w-3xl text-center">
+  <main class="w-full max-w-md text-center">
 
-    <!-- VIDEO: auto-plays once, with sound when the browser allows; volume/mute in controls -->
-    <div class="mx-auto rounded-3xl overflow-hidden border border-white/10 shadow-[0_25px_80px_rgba(0,0,0,.55)] bg-black max-w-xl">
-      <video id="mercyVideo" class="w-full aspect-[9/16] max-h-[62vh] object-cover"
+    <!-- WORDS FIRST -->
+    <h1 class="gold-text text-3xl sm:text-5xl font-extrabold leading-tight">I&rsquo;m Coming Home<br>to Mercy</h1>
+
+    <!-- PICTURE BELOW THE WORDS: square, smaller video -->
+    <div class="mx-auto mt-8 rounded-2xl overflow-hidden border border-white/10 shadow-[0_25px_80px_rgba(0,0,0,.55)] bg-black max-w-[300px]">
+      <video id="mercyVideo" class="w-full aspect-square object-cover"
              playsinline controls preload="auto">
         <source src="Where_the_Road_Grew_Quiet_11-01%2001-34-28.mp4" type="video/mp4">
         Your browser does not support the video tag.
       </video>
     </div>
-    <p class="mt-3 text-sm text-slate-300">▶ Second preview of the video — tap to hear how it sounds. Plays once.</p>
 
-    <!-- HEAR THE WHOLE SONG -->
+    <!-- SONG -->
     <button id="songBtn" onclick="toggleSong()"
-            class="btn-gold pulse-ring relative mt-8 inline-flex items-center gap-4 rounded-full px-10 py-5 font-extrabold text-lg sm:text-xl select-none">
-      <svg id="iconPlay" class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-      <svg id="iconPause" class="w-7 h-7 hidden" viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
+            class="btn-gold relative mt-8 inline-flex items-center gap-3 rounded-full px-8 py-4 font-extrabold text-base sm:text-lg select-none">
+      <svg id="iconPlay" class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+      <svg id="iconPause" class="w-6 h-6 hidden" viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
       <span id="btnLabel">Hear the Whole Song</span>
-      <span class="eq" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></span>
     </button>
 
-    <!-- TITLE BLOCK (bottom) -->
-    <p class="tracking-[0.45em] uppercase text-xs text-amber-200/70 mt-12">The Soulful Gospel Anthem</p>
-    <h1 class="gold-text text-4xl sm:text-6xl font-extrabold leading-tight mt-2">I&rsquo;m Coming Home<br>to Mercy</h1>
-    <p class="text-slate-300/90 mt-2 text-lg">Frederick D. Thomas, Jr. &middot; #NOQUIT</p>
-
-    <footer class="mt-8 text-slate-500 text-sm">
+    <footer class="mt-10 text-slate-400 text-sm">
       <p>&copy; 2026 Frederick D. Thomas, Jr.</p>
     </footer>
   </main>
@@ -70,8 +58,7 @@
   var song  = document.getElementById("mercySong");
   var btn   = document.getElementById("songBtn");
 
-  // Auto-play WITH sound, exactly once; volume/mute stays available in the controls.
-  // If the browser blocks loud autoplay, start muted and unmutes itself on the viewer's first tap.
+  // Auto-play with sound, once; volume/mute stays in the controls.
   function autoplayUnmuted() {
     video.muted = false;
     var p = video.play();
@@ -87,7 +74,7 @@
   }
   autoplayUnmuted();
 
-  // Song button with filename fallback
+  // Song filename fallbacks
   var songCandidates = [
     "I%27m%20Coming%20Home%20to%20Mercy.m4a",
     "I%27m%20Coming%20Home%20to%20Mercy.wav",
@@ -106,13 +93,11 @@
     else { song.pause(); }
   }
   song.addEventListener("play",  function () {
-    btn.classList.add("playing");
     document.getElementById("iconPlay").classList.add("hidden");
     document.getElementById("iconPause").classList.remove("hidden");
     document.getElementById("btnLabel").textContent = "Now Playing — Tap to Pause";
   });
   song.addEventListener("pause", function () {
-    btn.classList.remove("playing");
     document.getElementById("iconPlay").classList.remove("hidden");
     document.getElementById("iconPause").classList.add("hidden");
     document.getElementById("btnLabel").textContent = "Hear the Whole Song";
