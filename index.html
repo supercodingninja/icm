@@ -1,101 +1,89 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>I’m Coming Home to Mercy — Frederick D. Thomas, Jr.</title>
-<meta name="description" content="The soulful gospel anthem — I’m Coming Home to Mercy, by Frederick D. Thomas, Jr.">
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
-  :root { --gold: #C9A227; --navy: #0B1F3A; }
-  body { background: radial-gradient(1200px 700px at 50% -10%, #16294b 0%, #0B1F3A 55%, #050b16 100%); }
-  .gold-text { background: linear-gradient(92deg, #F3D98B, #C9A227 45%, #8A6D12); -webkit-background-clip: text; background-clip: text; color: transparent; }
-  .btn-gold { background: linear-gradient(135deg, #F3D98B, #C9A227 55%, #9c7c17); box-shadow: 0 12px 40px rgba(201,162,39,.45), inset 0 1px 0 rgba(255,255,255,.5); transition: transform .18s ease, box-shadow .18s ease; }
-  .btn-gold:hover { transform: translateY(-3px) scale(1.03); box-shadow: 0 18px 55px rgba(201,162,39,.6), inset 0 1px 0 rgba(255,255,255,.5); }
+  body {
+    background: #050b16 url("img") center/cover no-repeat fixed;
+    font-family: ui-sans-serif, system-ui, sans-serif;
+  }
+  body::before { content:""; position:fixed; inset:0; background:rgba(5,11,22,.55); z-index:-1; }
+  .gold-text { background: linear-gradient(92deg,#F3D98B,#C9A227 45%,#8A6D12); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .btn-gold { background: linear-gradient(135deg,#F3D98B,#C9A227 55%,#9c7c17); color:#0B1F3A; box-shadow:0 12px 40px rgba(201,162,39,.45), inset 0 1px 0 rgba(255,255,255,.5); transition: transform .18s ease, box-shadow .18s ease; }
+  .btn-gold:hover { transform: translateY(-3px) scale(1.03); box-shadow:0 18px 55px rgba(201,162,39,.6), inset 0 1px 0 rgba(255,255,255,.5); }
   .btn-gold:active { transform: translateY(0) scale(.98); }
   .pulse-ring::before { content:""; position:absolute; inset:-10px; border-radius:9999px; border:2px solid rgba(201,162,39,.55); animation: ring 2s ease-out infinite; }
-  @keyframes ring { 0% { transform: scale(.9); opacity:.9; } 100% { transform: scale(1.35); opacity:0; } }
+  @keyframes ring { 0%{transform:scale(.9);opacity:.9} 100%{transform:scale(1.35);opacity:0} }
   .eq span { display:inline-block; width:5px; margin:0 3px; border-radius:3px; background:linear-gradient(180deg,#F3D98B,#8A6D12); animation: eq 1s ease-in-out infinite; animation-play-state: paused; }
   .playing .eq span { animation-play-state: running; }
   .eq span:nth-child(1){height:16px;animation-delay:0s}.eq span:nth-child(2){height:28px;animation-delay:.15s}
   .eq span:nth-child(3){height:20px;animation-delay:.3s}.eq span:nth-child(4){height:32px;animation-delay:.45s}
   .eq span:nth-child(5){height:18px;animation-delay:.6s}
   @keyframes eq { 0%,100%{transform:scaleY(.4)} 50%{transform:scaleY(1)} }
-  video::-webkit-media-controls-panel { background: rgba(11,31,58,.6); }
 </style>
 </head>
-<body class="min-h-screen text-white flex items-center justify-center px-4 py-10 font-sans antialiased">
-
+<body class="min-h-screen text-white flex items-center justify-center px-4 py-8 antialiased">
   <main class="w-full max-w-3xl text-center">
 
-    <p class="tracking-[0.45em] uppercase text-xs text-amber-200/70 mb-4">The Soulful Gospel Anthem</p>
-    <h1 class="gold-text text-4xl sm:text-6xl font-extrabold leading-tight mb-3">I&rsquo;m Coming Home<br>to Mercy</h1>
-    <p class="text-slate-300/90 mb-8 text-lg">Frederick D. Thomas, Jr. &middot; <span class="text-amber-200/80">#NOQUIT</span></p>
-
-    <!-- VIDEO: plays automatically, one time (browsers require muted autoplay) -->
+    <!-- VIDEO: auto-plays with sound; volume/mute available in controls -->
     <div class="mx-auto rounded-3xl overflow-hidden border border-white/10 shadow-[0_25px_80px_rgba(0,0,0,.55)] bg-black max-w-xl">
       <video id="mercyVideo" class="w-full aspect-[9/16] max-h-[62vh] object-cover"
-             autoplay muted playsinline preload="auto" controls>
-        <source id="videoSrc" type="video/mp4">
+             autoplay playsinline controls preload="auto">
+        <source src="Where_the_Road_Grew_Quiet_11-01%2001-34-28.mp4" type="video/mp4">
         Your browser does not support the video tag.
       </video>
     </div>
-    <p class="mt-3 text-sm text-slate-400">Tap the video for sound &middot; it plays once, then yours to replay.</p>
+    <p class="mt-3 text-sm text-slate-300">▶ Second preview of the video — tap to hear how it sounds. Plays once.</p>
 
-    <!-- FULL SONG BUTTON -->
+    <!-- HEAR THE WHOLE SONG -->
     <button id="songBtn" onclick="toggleSong()"
-            class="btn-gold pulse-ring relative mt-10 inline-flex items-center gap-4 rounded-full px-10 py-5 text-navy font-extrabold text-lg sm:text-xl select-none">
+            class="btn-gold pulse-ring relative mt-8 inline-flex items-center gap-4 rounded-full px-10 py-5 font-extrabold text-lg sm:text-xl select-none">
       <svg id="iconPlay" class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
       <svg id="iconPause" class="w-7 h-7 hidden" viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
-      <span id="btnLabel">Play the Full Song</span>
+      <span id="btnLabel">Hear the Whole Song</span>
       <span class="eq" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></span>
     </button>
-    <p class="mt-3 text-sm text-slate-400">I&rsquo;m Coming Home to Mercy &middot; full audio</p>
 
-    <footer class="mt-14 text-slate-500 text-sm">
-      <p>&ldquo;Success is never on discount. Greatness is never on sale.&rdquo;</p>
-      <p class="mt-1 text-amber-200/60">&copy; 2026 Frederick D. Thomas, Jr. &middot; Go4Zero</p>
+    <!-- TITLE BLOCK (bottom) -->
+    <p class="tracking-[0.45em] uppercase text-xs text-amber-200/70 mt-12">The Soulful Gospel Anthem</p>
+    <h1 class="gold-text text-4xl sm:text-6xl font-extrabold leading-tight mt-2">I&rsquo;m Coming Home<br>to Mercy</h1>
+    <p class="text-slate-300/90 mt-2 text-lg">Frederick D. Thomas, Jr.</p>
+
+    <footer class="mt-8 text-slate-500 text-sm">
+      <p>&copy; 2026 Frederick D. Thomas, Jr.</p>
     </footer>
   </main>
 
   <audio id="mercySong" preload="auto">
-    <source id="songSrc" type="audio/mp4">
+    <source src="I%27m%20Coming%20Home%20to%20Mercy.m4a" type="audio/mp4">
   </audio>
 
 <script>
-  // File candidates: the first one that loads wins (handles spaces / literal %20 in filenames)
-  var videoCandidates = [
-    "Where_the_Road_Grew_Quiet_11-01%2001-34-28.mp4",
-    "Where_the_Road_Grew_Quiet_11-01%252001-34-28.mp4",
-    "video.mp4"
-  ];
-  var songCandidates = [
-    "I'm Coming Home to Mercy.m4a",
-    "I%27m%20Coming%20Home%20to%20Mercy.m4a",
-    "song.wav"
-  ];
-  function chainSource(el, candidates) {
-    var src = el.querySelector("source");
-    var i = 0;
-    function tryNext() {
-      if (i >= candidates.length) return;
-      src.src = candidates[i++];
-      el.load();
-    }
-    src.addEventListener("error", tryNext);
-    tryNext();
-  }
   var video = document.getElementById("mercyVideo");
   var song  = document.getElementById("mercySong");
-  chainSource(video, videoCandidates);
-  chainSource(song, songCandidates);
+  var btn   = document.getElementById("songBtn");
 
-  var btn = document.getElementById("songBtn");
+  // Auto-play WITH sound; if the browser blocks it, fall back to muted and retry on first tap
+  function tryUnmuted() {
+    video.muted = false;
+    var p = video.play();
+    if (p && p.catch) p.catch(function () {
+      video.muted = true;
+      video.play();
+      video.addEventListener("click", function once() {
+        video.muted = false;
+        video.removeEventListener("click", once);
+      });
+    });
+  }
+  video.addEventListener("canplay", tryUnmuted, { once: true });
+
   function toggleSong() {
-    if (song.paused) {
-      video.pause();              // video yields to the song
-      song.play();
-    } else { song.pause(); }
+    if (song.paused) { video.pause(); song.play(); }
+    else { song.pause(); }
   }
   song.addEventListener("play",  function () {
     btn.classList.add("playing");
@@ -107,7 +95,7 @@
     btn.classList.remove("playing");
     document.getElementById("iconPlay").classList.remove("hidden");
     document.getElementById("iconPause").classList.add("hidden");
-    document.getElementById("btnLabel").textContent = "Play the Full Song";
+    document.getElementById("btnLabel").textContent = "Hear the Whole Song";
   });
   song.addEventListener("ended", function () { song.dispatchEvent(new Event("pause")); });
 </script>
