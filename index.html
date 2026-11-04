@@ -2,107 +2,97 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>I’m Coming Home to Mercy — Frederick D. Thomas, Jr.</title>
-<script src="https://cdn.tailwindcss.com"></script>
 <style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { height:100%; }
   body {
-    background-color: #050b16;
-    background-image: url("IMG_3183.jpeg"), url("img"), url("img.jpg");
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    font-family: ui-sans-serif, system-ui, sans-serif;
+    height:100dvh;
+    overflow:hidden;
+    background:#050b16 url("IMG_3183.jpeg") top center / cover no-repeat fixed;
+    font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
+    color:#fff;
   }
-  body::after { content:""; position:fixed; inset:0; background:rgba(5,11,22,.4); z-index:-1; pointer-events:none; }
-  .gold-text { background: linear-gradient(92deg,#F3D98B,#C9A227 45%,#8A6D12); -webkit-background-clip:text; background-clip:text; color:transparent; }
-  .btn-gold { background: linear-gradient(135deg,#F3D98B,#C9A227 55%,#9c7c17); color:#0B1F3A; box-shadow:0 12px 40px rgba(201,162,39,.45), inset 0 1px 0 rgba(255,255,255,.5); transition: transform .18s ease, box-shadow .18s ease; }
-  .btn-gold:hover { transform: translateY(-3px) scale(1.03); box-shadow:0 18px 55px rgba(201,162,39,.6), inset 0 1px 0 rgba(255,255,255,.5); }
-  .btn-gold:active { transform: translateY(0) scale(.98); }
+  body::after { content:""; position:fixed; inset:0; background:rgba(5,11,22,.35); z-index:0; pointer-events:none; }
+  .stage {
+    position:relative; z-index:1;
+    height:100dvh;
+    display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+    gap:2.2dvh;
+    padding:2dvh 4vw;
+    text-align:center;
+  }
+  video {
+    width:auto; height:auto;
+    max-width:min(72vw, 340px);
+    max-height:52dvh;
+    aspect-ratio:9/16;
+    object-fit:cover;
+    border-radius:18px;
+    border:1px solid rgba(255,255,255,.15);
+    box-shadow:0 20px 60px rgba(0,0,0,.6);
+    background:#000;
+  }
+  .title {
+    font-size:clamp(13px, 2.6vw, 18px);
+    font-weight:600;
+    letter-spacing:.04em;
+    color:#F3D98B;
+    white-space:nowrap;
+    text-shadow:0 2px 10px rgba(0,0,0,.7);
+  }
+  .btn {
+    background:linear-gradient(135deg,#F3D98B,#C9A227 55%,#9c7c17);
+    color:#0B1F3A;
+    font-weight:800;
+    font-size:clamp(14px, 3vw, 18px);
+    border:none; border-radius:9999px;
+    padding:1.6dvh 5vw;
+    cursor:pointer;
+    box-shadow:0 10px 30px rgba(201,162,39,.5), inset 0 1px 0 rgba(255,255,255,.5);
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .btn:hover { transform:translateY(-2px) scale(1.03); }
+  .btn:active { transform:scale(.97); }
 </style>
 </head>
-<body class="min-h-screen text-white flex items-center justify-center px-4 py-8 antialiased">
-  <main class="w-full max-w-md text-center">
-
-    <!-- WORDS FIRST -->
-    <h1 class="gold-text text-3xl sm:text-5xl font-extrabold leading-tight">I&rsquo;m Coming Home<br>to Mercy</h1>
-
-    <!-- PICTURE BELOW THE WORDS: square, smaller video -->
-    <div class="mx-auto mt-8 rounded-2xl overflow-hidden border border-white/10 shadow-[0_25px_80px_rgba(0,0,0,.55)] bg-black max-w-[300px]">
-      <video id="mercyVideo" class="w-full aspect-square object-cover"
-             playsinline controls preload="auto">
-        <source src="Where_the_Road_Grew_Quiet_11-01%2001-34-28.mp4" type="video/mp4">
-        Your browser does not support the video tag.
-      </video>
-    </div>
-
-    <!-- SONG -->
-    <button id="songBtn" onclick="toggleSong()"
-            class="btn-gold relative mt-8 inline-flex items-center gap-3 rounded-full px-8 py-4 font-extrabold text-base sm:text-lg select-none">
-      <svg id="iconPlay" class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-      <svg id="iconPause" class="w-6 h-6 hidden" viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
-      <span id="btnLabel">Hear the Whole Song</span>
-    </button>
-
-    <footer class="mt-10 text-slate-400 text-sm">
-      <p>&copy; 2026 Frederick D. Thomas, Jr.</p>
-    </footer>
-  </main>
-
-  <audio id="mercySong" preload="auto">
+<body>
+  <div class="stage">
+    <video id="v" playsinline controls preload="auto">
+      <source src="Where_the_Road_Grew_Quiet_11-01%2001-34-28.mp4" type="video/mp4">
+    </video>
+    <p class="title">I&rsquo;m Coming Home to Mercy &middot; Frederick D. Thomas, Jr.</p>
+    <button class="btn" id="btn" onclick="toggleSong()">&#9654; Full Song</button>
+  </div>
+  <audio id="song" preload="auto">
     <source id="songSrc" src="I%27m%20Coming%20Home%20to%20Mercy.m4a" type="audio/mp4">
   </audio>
-
 <script>
-  var video = document.getElementById("mercyVideo");
-  var song  = document.getElementById("mercySong");
-  var btn   = document.getElementById("songBtn");
-
-  // Auto-play with sound, once; volume/mute stays in the controls.
-  function autoplayUnmuted() {
-    video.muted = false;
-    var p = video.play();
+  var v = document.getElementById("v"), song = document.getElementById("song"), btn = document.getElementById("btn");
+  // auto-play once, with sound when allowed; volume/mute in controls
+  (function autoplay() {
+    v.muted = false;
+    var p = v.play();
     if (p && p.then) p.then(function () {
-      video.addEventListener("ended", function () { video.pause(); }, { once: true });
+      v.addEventListener("ended", function () { v.pause(); }, { once:true });
     }).catch(function () {
-      video.muted = true;
-      video.play().then(function () {
-        var unmute = function () { video.muted = false; video.removeEventListener("play", unmute); };
-        video.addEventListener("play", unmute);
-      }).catch(function () {});
-    });
-  }
-  autoplayUnmuted();
-
-  // Song filename fallbacks
-  var songCandidates = [
-    "I%27m%20Coming%20Home%20to%20Mercy.m4a",
-    "I%27m%20Coming%20Home%20to%20Mercy.wav",
-    "song.m4a",
-    "song.wav"
-  ];
-  (function chainSong() {
-    var src = document.getElementById("songSrc"), i = 0;
-    src.addEventListener("error", function () {
-      if (++i < songCandidates.length) { src.src = songCandidates[i]; song.load(); }
+      v.muted = true; v.play().catch(function(){});
+      var u = function () { v.muted = false; v.removeEventListener("play", u); };
+      v.addEventListener("play", u);
     });
   })();
-
+  var cands = ["I%27m%20Coming%20Home%20to%20Mercy.m4a","I%27m%20Coming%20Home%20to%20Mercy.wav","song.m4a","song.wav"], i = 0;
+  document.getElementById("songSrc").addEventListener("error", function () {
+    if (++i < cands.length) { this.src = cands[i]; song.load(); }
+  });
   function toggleSong() {
-    if (song.paused) { video.pause(); song.play(); }
-    else { song.pause(); }
+    if (song.paused) { v.pause(); song.play(); } else { song.pause(); }
   }
-  song.addEventListener("play",  function () {
-    document.getElementById("iconPlay").classList.add("hidden");
-    document.getElementById("iconPause").classList.remove("hidden");
-    document.getElementById("btnLabel").textContent = "Now Playing — Tap to Pause";
-  });
-  song.addEventListener("pause", function () {
-    document.getElementById("iconPlay").classList.remove("hidden");
-    document.getElementById("iconPause").classList.add("hidden");
-    document.getElementById("btnLabel").textContent = "Hear the Whole Song";
-  });
-  song.addEventListener("ended", function () { song.dispatchEvent(new Event("pause")); });
+  song.addEventListener("play",  function () { btn.innerHTML = "&#10073;&#10073; Playing — Tap to Pause"; });
+  song.addEventListener("pause", function () { btn.innerHTML = "&#9654; Full Song"; });
+  song.addEventListener("ended", function () { btn.innerHTML = "&#9654; Full Song"; });
 </script>
 </body>
 </html>
